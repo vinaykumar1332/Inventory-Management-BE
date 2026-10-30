@@ -1,0 +1,23 @@
+# Local PostgreSQL only. Reads POSTGRES_PASSWORD from backend/.env (copy it from .env.example first).
+services:
+  db:
+    image: postgres:16
+    container_name: sealtrack-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sealtrack
+      POSTGRES_USER: sealtrack_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in backend/.env}
+    ports:
+      # Bound to loopback so the database is not reachable from other machines on the network
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - sealtrack_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sealtrack_user -d sealtrack"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sealtrack_pgdata:

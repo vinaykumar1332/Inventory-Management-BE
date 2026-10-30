@@ -1,0 +1,11 @@
+# Local secrets: copy .env.example to .env and never commit the result
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Generated files
+media/
+staticfiles/
